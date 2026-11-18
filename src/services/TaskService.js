@@ -4,5 +4,13 @@ export class TaskService {
     this.taskValidationService = taskValidationService
   }
 
-  async createTask(task) { }
+  async createTask(taskData) {
+    const task = {
+      ...taskData,
+      priority: taskData.priority ?? 'Normal',
+      status: taskData.status ?? 'To do'
+    }
+
+    return this.taskRepository.save(task)
+  }
 }
