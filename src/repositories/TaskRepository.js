@@ -30,4 +30,12 @@ export class TaskRepository {
       { new: true }
     )
   }
+
+  async restore(taskId) {
+    return this.taskModel.findByIdAndUpdate(
+      taskId,
+      { isArchived: false },
+      { new: true }
+    )
+  }
 }
