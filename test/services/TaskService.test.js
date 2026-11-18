@@ -219,3 +219,25 @@ test('should reject an update with an empty title', async () => {
 
   assert.equal(taskRepository.update.called, false)
 })
+
+test('should reject an update with an invalid priority', async () => {
+  const taskId = 'task-123'
+
+  const updatedData = {
+    priority: 'Urgent'
+  }
+
+  const {
+    taskService,
+    taskRepository
+  } = createTaskService({
+    isValidPriority: false
+  })
+
+  await assert.rejects(
+    taskService.updateTask(taskId, updatedData),
+    /Invalid task priority/
+  )
+
+  assert.equal(taskRepository.update.called, false)
+})
