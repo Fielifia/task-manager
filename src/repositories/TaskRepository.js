@@ -22,4 +22,12 @@ export class TaskRepository {
   async delete(taskId) {
     return this.taskModel.findByIdAndDelete(taskId)
   }
+
+  async archive(taskId) {
+    return this.taskModel.findByIdAndUpdate(
+      taskId,
+      { isArchived: true },
+      { new: true }
+    )
+  }
 }
