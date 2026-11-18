@@ -163,3 +163,28 @@ test('should delete a task using its ID', async () => {
   assert.deepEqual(taskModel.findByIdAndDelete.firstCall.args, [taskId])
   assert.deepEqual(result, deletedTask)
 })
+
+test('should archive a task using its ID and setting isArchived to true', async () => {
+  const taskId = 'task-123'
+
+  const archivedTask = {
+    _id: taskId,
+    title: 'Task to archive',
+    isArchived: true
+  }
+
+  const { taskRepository, taskModel } = createTaskRepository()
+
+  taskModel.findByIdAndUpdate.resolves(archivedTask)
+
+  const result = await taskRepository.archive(taskId)
+
+  assert.equal(taskModel.findByIdAndUpdate.calledOnceWith(
+    taskId,
+    { isArchived: true },
+    { new: true }
+  ),
+    true
+  )
+  assert.equal(result, archivedTask)
+})
