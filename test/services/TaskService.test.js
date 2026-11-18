@@ -317,3 +317,16 @@ test('should archive a task', async () => {
   assert.equal(taskRepository.archive.calledOnceWith(taskId), true)
   assert.equal(result, archivedTask)
 })
+
+test('should return null when a task does not exist', async () => {
+  const taskId = 'nonexistent-task'
+
+  const { taskService, taskRepository } = createTaskService()
+
+  taskRepository.archive.resolves(null)
+
+  const result = await taskService.archiveTask(taskId)
+
+  assert.equal(taskRepository.archive.calledOnceWith(taskId), true)
+  assert.equal(result, null)
+})
