@@ -4,7 +4,9 @@
   "description": "A1.a2 – Test-Driven Development project for 1DV609 Software Testing",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test",
+    "test:watch": "node --test --watch",
+    "test:coverage": "c8 --reporter=text --reporter=html node --test"
   },
   "repository": {
     "type": "git",
@@ -13,9 +15,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/Fielifia/task-manager/issues"
   },
-  "homepage": "https://github.com/Fielifia/task-manager#readme"
+  "homepage": "https://github.com/Fielifia/task-manager#readme",
+  "devDependencies": {
+    "c8": "^12.0.0",
+    "sinon": "^22.1.0"
+  }
 }
