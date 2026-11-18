@@ -38,7 +38,7 @@ test('should save a task using the injected model', async () => {
   const result = await taskRepository.save(taskData)
 
   assert.equal(taskModel.create.calledOnce, true)
-  assert.deepEqual(taskModel.create.firstCall.args[0], taskData)
+  assert.deepEqual(taskModel.create.firstCall.args, [taskData])
   assert.deepEqual(result, savedTask)
 })
 
@@ -76,7 +76,7 @@ test('should find a task by its ID', async () => {
   const result = await taskRepository.findById(taskId)
 
   assert.equal(taskModel.findById.calledOnce, true)
-  assert.equal(taskModel.findById.firstCall.args[0], taskId)
+  assert.deepEqual(taskModel.findById.firstCall.args, [taskId])
   assert.deepEqual(result, foundTask)
 })
 
@@ -90,7 +90,7 @@ test('should return null when a task is not found', async () => {
   const result = await taskRepository.findById(taskId)
 
   assert.equal(taskModel.findById.calledOnce, true)
-  assert.equal(taskModel.findById.firstCall.args[0], taskId)
+  assert.deepEqual(taskModel.findById.firstCall.args, [taskId])
   assert.equal(result, null)
 })
 
@@ -160,6 +160,6 @@ test('should delete a task using its ID', async () => {
   const result = await taskRepository.delete(taskId)
 
   assert.equal(taskModel.findByIdAndDelete.calledOnce, true)
-  assert.equal(taskModel.findByIdAndDelete.firstCall.args[0], taskId)
+  assert.deepEqual(taskModel.findByIdAndDelete.firstCall.args, [taskId])
   assert.deepEqual(result, deletedTask)
 })
