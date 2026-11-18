@@ -6,4 +6,8 @@ export class TaskRepository {
   async save(taskData) {
     return this.taskModel.create(taskData)
   }
+
+  async findById(taskId) {
+    return this.taskModel.findById(taskId)
+  }
 }
