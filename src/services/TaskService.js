@@ -5,6 +5,10 @@ export class TaskService {
   }
 
   async createTask(taskData) {
+    if (!this.taskValidationService.isValidTitle(taskData.title)) {
+      throw new Error('Invalid task title')
+    }
+
     const task = {
       ...taskData,
       priority: taskData.priority ?? 'Normal',
