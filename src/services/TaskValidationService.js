@@ -1,5 +1,5 @@
 export class TaskValidationService {
   isValidTitle(title) {
-    // Implementation will be added in the GREEN phase.
+    return typeof title === 'string' && title.trim().length > 0
   }
 }
