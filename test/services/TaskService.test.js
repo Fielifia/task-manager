@@ -4,9 +4,9 @@ import sinon from 'sinon'
 import { TaskService } from '../../src/services/TaskService.js'
 
 function createTaskService({
-  isValidTitle = true,
-  isValidPriority = true,
-  isValidStatus = true
+  validTitle = true,
+  validPriority = true,
+  validStatus = true
 } = {}) {
   const taskRepository = {
     save: sinon.stub(),
@@ -18,9 +18,9 @@ function createTaskService({
   }
 
   const taskValidationService = {
-    isValidTitle: sinon.stub().returns(isValidTitle),
-    isValidPriority: sinon.stub().returns(isValidPriority),
-    isValidStatus: sinon.stub().returns(isValidStatus)
+    isValidTitle: sinon.stub().returns(validTitle),
+    isValidPriority: sinon.stub().returns(validPriority),
+    isValidStatus: sinon.stub().returns(validStatus)
   }
 
   const taskService = new TaskService(
@@ -36,7 +36,7 @@ function createTaskService({
 }
 
 // Task creation tests
-test('creates a task with default priority and status', async () => {
+test('should create a task with default priority and status when values are omitted', async () => {
   const {
     taskService,
     taskRepository,
@@ -71,7 +71,7 @@ test('should reject a task with an empty title', async () => {
     taskService,
     taskRepository
   } = createTaskService({
-    isValidTitle: false
+    validTitle: false
   })
 
   await assert.rejects(
@@ -87,7 +87,7 @@ test('should reject a task with an invalid priority', async () => {
     taskService,
     taskRepository
   } = createTaskService({
-    isValidPriority: false
+    validPriority: false
   })
 
   await assert.rejects(
@@ -106,7 +106,7 @@ test('should reject a task with an invalid status', async () => {
     taskService,
     taskRepository
   } = createTaskService({
-    isValidStatus: false
+    validStatus: false
   })
 
   await assert.rejects(
@@ -121,7 +121,7 @@ test('should reject a task with an invalid status', async () => {
 })
 
 // Task retrieval tests
-test('should return a task by its ID', async () => {
+test('should return the task matching the provided ID', async () => {
   const taskId = 'task-123'
 
   const foundTask = {
@@ -142,18 +142,19 @@ test('should return a task by its ID', async () => {
   assert.deepEqual(result, foundTask)
 })
 
-test('should return null when a task is not found', async () => {
+test('should return null when retrieving a task that does not exist', async () => {
   const { taskService, taskRepository } = createTaskService()
 
   taskRepository.findById.resolves(null)
 
   const result = await taskService.getTaskById('task-123')
 
+  assert.equal(taskRepository.findById.calledOnceWith('task-123'), true)
   assert.equal(result, null)
 })
 
 // Task update tests
-test('should delegate task updates to the repository', async () => {
+test('should pass the task ID and updated data to the repository', async () => {
   const taskId = 'task-123'
 
   const updatedData = {
@@ -180,7 +181,7 @@ test('should delegate task updates to the repository', async () => {
   assert.deepEqual(result, updatedTask)
 })
 
-test('should return null when a task does not exist', async () => {
+test('should return null when updating a task that does not exist', async () => {
   const taskId = 'nonexistent-task'
 
   const updatedData = {
@@ -212,7 +213,7 @@ test('should reject an update with an empty title', async () => {
     taskService,
     taskRepository
   } = createTaskService({
-    isValidTitle: false
+    validTitle: false
   })
 
   await assert.rejects(
@@ -234,7 +235,7 @@ test('should reject an update with an invalid priority', async () => {
     taskService,
     taskRepository
   } = createTaskService({
-    isValidPriority: false
+    validPriority: false
   })
 
   await assert.rejects(
@@ -256,7 +257,7 @@ test('should reject an update with an invalid status', async () => {
     taskService,
     taskRepository
   } = createTaskService({
-    isValidStatus: false
+    validStatus: false
   })
 
   await assert.rejects(
@@ -268,7 +269,7 @@ test('should reject an update with an invalid status', async () => {
 })
 
 // Task deletion tests
-test('should delegate task deletion to the repository', async () => {
+test('should pass the task ID to the repository when deleting a task', async () => {
   const taskId = 'task-123'
 
   const deletedTask = {
@@ -286,7 +287,7 @@ test('should delegate task deletion to the repository', async () => {
   assert.equal(result, deletedTask)
 })
 
-test('should return null when a task does not exist', async () => {
+test('should return null when deleting a task that does not exist', async () => {
   const taskId = 'nonexistent-task'
 
   const { taskService, taskRepository } = createTaskService()
@@ -300,7 +301,7 @@ test('should return null when a task does not exist', async () => {
 })
 
 // Task archive tests
-test('should archive a task', async () => {
+test('should archive a task by its ID', async () => {
   const taskId = 'task-123'
 
   const archivedTask = {
@@ -319,7 +320,7 @@ test('should archive a task', async () => {
   assert.equal(result, archivedTask)
 })
 
-test('should return null when a task does not exist', async () => {
+test('should return null when archiving a task that does not exist', async () => {
   const taskId = 'nonexistent-task'
 
   const { taskService, taskRepository } = createTaskService()
@@ -332,7 +333,7 @@ test('should return null when a task does not exist', async () => {
   assert.equal(result, null)
 })
 
-test('should restore an archived task', async () => {
+test('should restore an archived task by its ID', async () => {
   const taskId = 'task-123'
 
   const restoredTask = {
@@ -349,4 +350,17 @@ test('should restore an archived task', async () => {
 
   assert.equal(taskRepository.restore.calledOnceWith(taskId), true)
   assert.equal(result, restoredTask)
+})
+
+test('should return null when restoring a task that does not exist', async () => {
+  const taskId = 'nonexistent-task'
+
+  const { taskService, taskRepository } = createTaskService()
+
+  taskRepository.restore.resolves(null)
+
+  const result = await taskService.restoreTask(taskId)
+
+  assert.equal(taskRepository.restore.calledOnceWith(taskId), true)
+  assert.equal(result, null)
 })
