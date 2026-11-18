@@ -1,5 +1,5 @@
-const VALID_PRIORITIES = ['Low', 'Normal', 'High']
-const VALID_STATUSES = ['To do', 'In progress', 'Done']
+const VALID_PRIORITIES = ['LOW', 'NORMAL', 'HIGH']
+const VALID_STATUSES = ['TODO', 'IN_PROGRESS', 'DONE']
 
 export class TaskValidationService {
   isValidTitle(title) {
