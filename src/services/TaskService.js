@@ -61,4 +61,8 @@ export class TaskService {
   async deleteTask(taskId) {
     return this.taskRepository.delete(taskId)
   }
+
+  async archiveTask(taskId) {
+    return this.taskRepository.archive(taskId)
+  }
 }
