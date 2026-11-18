@@ -34,7 +34,7 @@ export class TaskRepository {
   async restore(taskId) {
     return this.taskModel.findByIdAndUpdate(
       taskId,
-      { isArchived: false },
+      { archivedAt: null },
       { new: true }
     )
   }
