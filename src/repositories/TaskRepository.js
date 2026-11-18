@@ -10,4 +10,13 @@ export class TaskRepository {
   async findById(taskId) {
     return this.taskModel.findById(taskId)
   }
+
+  async update(taskId, updatedData) {
+    return this.taskModel.findByIdAndUpdate(
+      taskId,
+      updatedData,
+      { new: true }
+
+    )
+  }
 }
