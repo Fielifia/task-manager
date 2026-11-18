@@ -235,7 +235,7 @@ test('should return null when archiving a task that does not exist', async () =>
   }
 })
 
-test('should restore a task using its ID and setting isArchived to false', async () => {
+test('should restore a task using its ID and setting archivedAt to null', async () => {
   const taskId = 'task-123'
 
   const restoredTask = {

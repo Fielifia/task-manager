@@ -342,7 +342,7 @@ test('should archive a task by its ID', async () => {
   const archivedTask = {
     _id: taskId,
     title: 'Task to archive',
-    isArchived: true
+    archivedAt: new Date('2026-11-18T10:00:00.000Z')
   }
 
   const { taskService, taskRepository } = createTaskService()
@@ -374,7 +374,7 @@ test('should restore an archived task by its ID', async () => {
   const restoredTask = {
     _id: taskId,
     title: 'Restored task',
-    isArchived: false
+    archivedAt: null
   }
 
   const { taskService, taskRepository } = createTaskService()
