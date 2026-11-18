@@ -3,6 +3,19 @@ import assert from 'node:assert/strict'
 import sinon from 'sinon'
 import { TaskRepository } from '../../src/repositories/TaskRepository.js'
 
+function createTaskRepository() {
+  const taskModel = {
+    create: sinon.stub()
+  }
+
+  const taskRepository = new TaskRepository(taskModel)
+
+  return {
+    taskRepository,
+    taskModel
+  }
+}
+
 test('should save a task using the injected model', async () => {
   const taskData = {
     title: 'Complete project',
@@ -15,15 +28,30 @@ test('should save a task using the injected model', async () => {
     ...taskData
   }
 
-  const taskModel = {
-    create: sinon.stub().resolves(savedTask)
-  }
+  const { taskRepository, taskModel } = createTaskRepository()
 
-  const taskRepository = new TaskRepository(taskModel)
+  taskModel.create.resolves(savedTask)
 
   const result = await taskRepository.save(taskData)
 
   assert.equal(taskModel.create.calledOnce, true)
   assert.deepEqual(taskModel.create.firstCall.args[0], taskData)
   assert.deepEqual(result, savedTask)
+})
+
+test('should propagate errors when saving a task fails', async () => {
+  const error = new Error('Database error')
+
+  const { taskRepository, taskModel } = createTaskRepository()
+
+  taskModel.create.rejects(error)
+
+  await assert.rejects(
+    taskRepository.save({
+      title: 'Complete project'
+    }),
+    (receivedError) => receivedError === error
+  )
+
+  assert.equal(taskModel.create.calledOnce, true)
 })
