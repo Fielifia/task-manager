@@ -55,3 +55,24 @@ test('should propagate errors when saving a task fails', async () => {
 
   assert.equal(taskModel.create.calledOnce, true)
 })
+
+test('should find a task by its ID', async () => {
+  const taskId = 'task-123'
+
+  const foundTask = {
+    _id: taskId,
+    title: 'Complete project',
+    priority: 'Normal',
+    status: 'To do'
+  }
+
+  const { taskRepository, taskModel } = createTaskRepository()
+
+  taskModel.findById = sinon.stub().resolves(foundTask)
+
+  const result = await taskRepository.findById(taskId)
+
+  assert.equal(taskModel.findById.calledOnce, true)
+  assert.equal(taskModel.findById.firstCall.args[0], taskId)
+  assert.deepEqual(result, foundTask)
+})
