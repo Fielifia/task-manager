@@ -29,4 +29,8 @@ export class TaskService {
   async getTaskById(taskId) {
     return this.taskRepository.findById(taskId)
   }
+
+  async updateTask(taskId, updatedData) {
+    return this.taskRepository.update(taskId, updatedData)
+  }
 }

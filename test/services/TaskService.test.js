@@ -152,7 +152,7 @@ test('should delegate task updates to the repository', async () => {
 
   const updatedData = {
     title: 'Update project',
-    priority: 'High',
+    priority: 'High'
   }
 
   const { taskService, taskRepository } = createTaskService()
@@ -166,6 +166,7 @@ test('should delegate task updates to the repository', async () => {
 
   const result = await taskService.updateTask(taskId, updatedData)
 
+  assert.equal(taskRepository.update.calledOnce, true)
   assert.deepEqual(
     taskRepository.update.firstCall.args,
     [taskId, updatedData]
