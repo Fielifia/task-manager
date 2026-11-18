@@ -35,3 +35,25 @@ test('creates a task with default priority and status', async () => {
     status: 'To do'
   })
 })
+
+test('should reject a task with an empty title', async () => {
+  const taskRepository = {
+    save: sinon.stub()
+  }
+
+  const taskValidationService = {
+    isValidTitle: sinon.stub().returns(false),
+  }
+
+  const taskService = new TaskService(
+    taskRepository,
+    taskValidationService
+  )
+
+  await assert.rejects(
+    taskService.createTask({ title: '' }),
+    /Invalid task title/
+  )
+
+  assert.equal(taskRepository.save.called, false)
+})
