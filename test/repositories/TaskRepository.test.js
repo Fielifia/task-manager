@@ -179,48 +179,60 @@ test('should return null when deleting a task that does not exist', async () => 
   assert.equal(result, null)
 })
 
-test('should archive a task using its ID and setting isArchived to true', async () => {
+test('should archive a task using its ID and setting archivedAt', async () => {
   const taskId = 'task-123'
+  const archivedAt = new Date('2026-11-18T10:00:00.000Z')
+  const clock = sinon.useFakeTimers({ now: archivedAt })
 
-  const archivedTask = {
-    _id: taskId,
-    title: 'Task to archive',
-    isArchived: true
+  try {
+    const archivedTask = {
+      _id: taskId,
+      title: 'Task to archive',
+      archivedAt
+    }
+
+    const { taskRepository, taskModel } = createTaskRepository()
+
+    taskModel.findByIdAndUpdate.resolves(archivedTask)
+
+    const result = await taskRepository.archive(taskId)
+
+    assert.equal(taskModel.findByIdAndUpdate.calledOnceWith(
+      taskId,
+      { archivedAt },
+      { new: true }
+    ),
+      true
+    )
+    assert.equal(result, archivedTask)
+  } finally {
+    clock.restore()
   }
-
-  const { taskRepository, taskModel } = createTaskRepository()
-
-  taskModel.findByIdAndUpdate.resolves(archivedTask)
-
-  const result = await taskRepository.archive(taskId)
-
-  assert.equal(taskModel.findByIdAndUpdate.calledOnceWith(
-    taskId,
-    { isArchived: true },
-    { new: true }
-  ),
-    true
-  )
-  assert.equal(result, archivedTask)
 })
 
 test('should return null when archiving a task that does not exist', async () => {
   const taskId = 'nonexistent-task'
+  const archivedAt = new Date('2026-11-18T10:00:00.000Z')
+  const clock = sinon.useFakeTimers({ now: archivedAt })
 
-  const { taskRepository, taskModel } = createTaskRepository()
+  try {
+    const { taskRepository, taskModel } = createTaskRepository()
 
-  taskModel.findByIdAndUpdate.resolves(null)
+    taskModel.findByIdAndUpdate.resolves(null)
 
-  const result = await taskRepository.archive(taskId)
+    const result = await taskRepository.archive(taskId)
 
-  assert.equal(taskModel.findByIdAndUpdate.calledOnceWith(
-    taskId,
-    { isArchived: true },
-    { new: true }
-  ),
-    true
-  )
-  assert.equal(result, null)
+    assert.equal(taskModel.findByIdAndUpdate.calledOnceWith(
+      taskId,
+      { archivedAt },
+      { new: true }
+    ),
+      true
+    )
+    assert.equal(result, null)
+  } finally {
+    clock.restore()
+  }
 })
 
 test('should restore a task using its ID and setting isArchived to false', async () => {
