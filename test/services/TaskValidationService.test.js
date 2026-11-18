@@ -42,39 +42,39 @@ test('should reject a number as a task title', () => {
 })
 
 // Task priority validation tests
-test('should accept Low as a valid priority', () => {
+test('should accept LOW as a valid priority', () => {
   const validationService = new TaskValidationService()
 
-  assert.equal(validationService.isValidPriority('Low'), true)
+  assert.equal(validationService.isValidPriority('LOW'), true)
 })
 
-test('should accept Normal as a valid priority', () => {
+test('should accept NORMAL as a valid priority', () => {
   const validationService = new TaskValidationService()
 
-  assert.equal(validationService.isValidPriority('Normal'), true)
+  assert.equal(validationService.isValidPriority('NORMAL'), true)
 })
 
-test('should accept High as a valid priority', () => {
+test('should accept HIGH as a valid priority', () => {
   const validationService = new TaskValidationService()
 
-  assert.equal(validationService.isValidPriority('High'), true)
+  assert.equal(validationService.isValidPriority('HIGH'), true)
 })
 
 // Task status validation tests
-test('should accept To do as a valid status', () => {
+test('should accept TODO as a valid status', () => {
   const validationService = new TaskValidationService()
 
-  assert.equal(validationService.isValidStatus('To do'), true)
+  assert.equal(validationService.isValidStatus('TODO'), true)
 })
 
-test('should accept In progress as a valid status', () => {
+test('should accept IN_PROGRESS as a valid status', () => {
   const validationService = new TaskValidationService()
 
-  assert.equal(validationService.isValidStatus('In progress'), true)
+  assert.equal(validationService.isValidStatus('IN_PROGRESS'), true)
 })
 
-test('should accept Done as a valid status', () => {
+test('should accept DONE as a valid status', () => {
   const validationService = new TaskValidationService()
 
-  assert.equal(validationService.isValidStatus('Done'), true)
+  assert.equal(validationService.isValidStatus('DONE'), true)
 })
