@@ -39,8 +39,7 @@ These are planned choices and may be adjusted if the assignment requirements or 
 
 - [Requirements](/docs/REQUIREMENTS.md)
 - [Architecture](/docs/ARCHITECTURE.md)
-- [Test plan](docs/TEST-PLAN.md)
-- [TDD and Git workflow](/docs/TDD-PLAN.md)
+- [Test plan](/docs/TEST-PLAN.md)
 
 ## Development Principles
 
