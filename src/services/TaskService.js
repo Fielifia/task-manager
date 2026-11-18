@@ -15,11 +15,11 @@ export class TaskService {
       status: taskData.status ?? 'To do'
     }
 
-    if (!this.taskValidationService.isValidPriority(taskData.priority)) {
+    if (!this.taskValidationService.isValidPriority(task.priority)) {
       throw new Error('Invalid task priority')
     }
 
-    if (!this.taskValidationService.isValidStatus(taskData.status)) {
+    if (!this.taskValidationService.isValidStatus(task.status)) {
       throw new Error('Invalid task status')
     }
 

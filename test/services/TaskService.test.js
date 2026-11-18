@@ -29,6 +29,16 @@ test('creates a task with default priority and status', async () => {
 
   assert.equal(taskRepository.save.calledOnce, true)
 
+  assert.equal(
+    taskValidationService.isValidPriority.calledWith('Normal'),
+    true
+  )
+
+  assert.equal(
+    taskValidationService.isValidStatus.calledWith('To do'),
+    true
+  )
+
   assert.deepEqual(taskRepository.save.firstCall.args[0], {
     title: 'Complete project',
     priority: 'Normal',
@@ -65,7 +75,7 @@ test('should reject a task with an invalid priority', async () => {
 
   const taskValidationService = {
     isValidTitle: sinon.stub().returns(true),
-    isValidPriority: sinon.stub().returns(false),
+    isValidPriority: sinon.stub().returns(false)
   }
 
   const taskService = new TaskService(
