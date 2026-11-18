@@ -241,7 +241,7 @@ test('should restore a task using its ID and setting isArchived to false', async
   const restoredTask = {
     _id: taskId,
     title: 'Restored task',
-    isArchived: false
+    archivedAt: null
   }
 
   const { taskRepository, taskModel } = createTaskRepository()
@@ -252,7 +252,7 @@ test('should restore a task using its ID and setting isArchived to false', async
 
   assert.equal(taskModel.findByIdAndUpdate.calledOnceWith(
     taskId,
-    { isArchived: false },
+    { archivedAt: null },
     { new: true }
   ),
     true
@@ -271,7 +271,7 @@ test('should return null when restoring a task that does not exist', async () =>
 
   assert.equal(taskModel.findByIdAndUpdate.calledOnceWith(
     taskId,
-    { isArchived: false },
+    { archivedAt: null },
     { new: true }
   ),
     true
