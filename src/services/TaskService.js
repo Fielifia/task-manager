@@ -31,13 +31,26 @@ export class TaskService {
   }
 
   async updateTask(taskId, updatedData) {
-    if (
-      'title' in updatedData &&
-      !this.taskValidationService.isValidTitle(updatedData.title)
-    ) {
-      throw new Error('Invalid task title')
+    const validationRules = {
+      title: {
+        validate: this.taskValidationService.isValidTitle,
+        error: 'Invalid task title'
+      },
+      priority: {
+        validate: this.taskValidationService.isValidPriority,
+        error: 'Invalid task priority'
+      }
     }
-    
+
+    for (const [field, rule] of Object.entries(validationRules)) {
+      if (
+        field in updatedData &&
+        !rule.validate(updatedData[field])
+      ) {
+        throw new Error(rule.error)
+      }
+    }
+
     return this.taskRepository.update(taskId, updatedData)
   }
 }
