@@ -1,17 +1,16 @@
+const VALID_PRIORITIES = ['Low', 'Normal', 'High']
+const VALID_STATUSES = ['To do', 'In progress', 'Done']
+
 export class TaskValidationService {
   isValidTitle(title) {
     return typeof title === 'string' && title.trim().length > 0
   }
 
   isValidPriority(priority) {
-    const validPriorities = ['Low', 'Normal', 'High']
-
-    return validPriorities.includes(priority)
+    return VALID_PRIORITIES.includes(priority)
   }
 
   isValidStatus(status) {
-    const validStatuses = ['To do', 'In progress', 'Done']
-
-    return validStatuses.includes(status)
+    return VALID_STATUSES.includes(status)
   }
 }
