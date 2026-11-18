@@ -42,7 +42,11 @@ function createTaskService({
 }
 
 // Task creation tests
-test('should create a task with default priority and status when values are omitted', async () => {
+test('should pass task data to the TaskFactory when creating a task', async () => {
+  const taskData = {
+    title: 'Complete project'
+  }
+
   const {
     taskService,
     taskRepository,
@@ -50,34 +54,14 @@ test('should create a task with default priority and status when values are omit
     taskFactory
   } = createTaskService()
 
-  await taskService.createTask({
-    title: 'Complete project'
-  })
+  await taskService.createTask(taskData)
 
-  assert.equal(taskRepository.save.calledOnce, true)
-
-  assert.equal(
-    taskValidationService.isValidPriority.calledWith('Normal'),
-    true
-  )
+  assert.equal(taskFactory.create.calledOnceWith(taskData), true)
+  assert.equal(taskRepository.save.calledOnceWith(taskFactory.create.returnValues[0]),
+    true)
 
   assert.equal(
-    taskValidationService.isValidStatus.calledWith('To do'),
-    true
-  )
-
-  assert.deepEqual(taskRepository.save.firstCall.args[0], {
-    title: 'Complete project',
-    priority: 'Normal',
-    status: 'To do'
-  })
-
-  assert.equal(
-    taskFactory.create.calledOnceWith({
-      title: 'Complete project',
-      priority: 'Normal',
-      status: 'To do'
-    }),
+    taskValidationService.isValidTitle.calledOnceWith(taskData.title),
     true
   )
 })

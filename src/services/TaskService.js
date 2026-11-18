@@ -10,11 +10,7 @@ export class TaskService {
       throw new Error('Invalid task title')
     }
 
-    const task = this.taskFactory.create({
-      ...taskData,
-      priority: taskData.priority ?? 'Normal',
-      status: taskData.status ?? 'To do'
-    })
+    const task = this.taskFactory.create(taskData)
 
     if (!this.taskValidationService.isValidPriority(task.priority)) {
       throw new Error('Invalid task priority')
