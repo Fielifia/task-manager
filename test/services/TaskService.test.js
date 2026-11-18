@@ -57,3 +57,29 @@ test('should reject a task with an empty title', async () => {
 
   assert.equal(taskRepository.save.called, false)
 })
+
+test('should reject a task with an invalid priority', async () => {
+  const taskRepository = {
+    save: sinon.stub()
+  }
+
+  const taskValidationService = {
+    isValidTitle: sinon.stub().returns(true),
+    isValidPriority: sinon.stub().returns(false),
+  }
+
+  const taskService = new TaskService(
+    taskRepository,
+    taskValidationService
+  )
+
+  await assert.rejects(
+    taskService.createTask({
+      title: 'Complete project',
+      priority: 'Urgent'
+    }),
+    /Invalid task priority/
+  )
+
+  assert.equal(taskRepository.save.called, false)
+})
