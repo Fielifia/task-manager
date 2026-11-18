@@ -64,17 +64,17 @@ test('should accept High as a valid priority', () => {
 test('should accept To do as a valid status', () => {
   const validationService = new TaskValidationService()
 
-  assert.equal(validationService.isValidPriority('To do'), true)
+  assert.equal(validationService.isValidStatus('To do'), true)
 })
 
 test('should accept In progress as a valid status', () => {
   const validationService = new TaskValidationService()
 
-  assert.equal(validationService.isValidPriority('In progress'), true)
+  assert.equal(validationService.isValidStatus('In progress'), true)
 })
 
 test('should accept Done as a valid status', () => {
   const validationService = new TaskValidationService()
 
-  assert.equal(validationService.isValidPriority('Done'), true)
+  assert.equal(validationService.isValidStatus('Done'), true)
 })
