@@ -10,7 +10,8 @@ function createTaskService({
 } = {}) {
   const taskRepository = {
     save: sinon.stub(),
-    findById: sinon.stub()
+    findById: sinon.stub(),
+    update: sinon.stub()
   }
 
   const taskValidationService = {
@@ -144,4 +145,30 @@ test('should return null when a task is not found', async () => {
   const result = await taskService.getTaskById('task-123')
 
   assert.deepEqual(result, null)
+})
+
+test('should delegate task updates to the repository', async () => {
+  const taskId = 'task-123'
+
+  const updatedData = {
+    title: 'Update project',
+    priority: 'High',
+  }
+
+  const { taskService, taskRepository } = createTaskService()
+
+  const updatedTask = {
+    _id: taskId,
+    ...updatedData
+  }
+
+  taskRepository.update.resolves(updatedTask)
+
+  const result = await taskService.updateTask(taskId, updatedData)
+
+  assert.deepEqual(
+    taskRepository.update.firstCall.args,
+    [taskId, updatedData]
+  )
+  assert.deepEqual(result, updatedTask)
 })
