@@ -31,6 +31,13 @@ export class TaskService {
   }
 
   async updateTask(taskId, updatedData) {
+    if (
+      'title' in updatedData &&
+      !this.taskValidationService.isValidTitle(updatedData.title)
+    ) {
+      throw new Error('Invalid task title')
+    }
+    
     return this.taskRepository.update(taskId, updatedData)
   }
 }
