@@ -91,3 +91,33 @@ test('should return null when a task is not found', async () => {
   assert.equal(taskModel.findById.firstCall.args[0], taskId)
   assert.equal(result, null)
 })
+
+test('should update a task using its ID and updated data', async () => {
+  const taskId = 'task-123'
+
+  const updatedData = {
+    title: 'Update project',
+    priority: 'High',
+    status: 'In progress'
+  }
+
+  const updatedTask = {
+    _id: taskId,
+    ...updatedData
+  }
+
+  const { taskRepository, taskModel } = createTaskRepository()
+
+  taskModel.findByIdAndUpdate = sinon.stub().resolves(updatedTask)
+
+  const result = await taskRepository.update(taskId, updatedData)
+
+  assert.equal(taskModel.findByIdAndUpdate.calledOnce, true)
+
+  assert.deepEqual(
+    taskModel.findByIdAndUpdate.firstCall.args,
+    [taskId, updatedData, { new: true }]
+  )
+
+  assert.deepEqual(result, updatedTask)
+})
