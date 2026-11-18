@@ -66,4 +66,13 @@ export class TaskService {
   async restoreTask(taskId) {
     return this.taskRepository.restore(taskId)
   }
+
+  async completeTask(taskId) {
+    const completedAt = new Date()
+
+    return this.taskRepository.update(taskId, {
+      status: 'DONE',
+      completedAt
+    })
+  }
 }
