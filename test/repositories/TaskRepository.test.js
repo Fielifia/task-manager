@@ -164,6 +164,21 @@ test('should delete a task using its ID', async () => {
   assert.deepEqual(result, deletedTask)
 })
 
+test('should return null when deleting a task that does not exist', async () => {
+  const taskId = 'nonexistent-task'
+
+  const { taskRepository, taskModel } = createTaskRepository()
+
+  taskModel.findByIdAndDelete.resolves(null)
+
+  const result = await taskRepository.delete(taskId)
+
+  assert.equal(
+    taskModel.findByIdAndDelete.calledOnceWith(taskId),
+    true)
+  assert.equal(result, null)
+})
+
 test('should archive a task using its ID and setting isArchived to true', async () => {
   const taskId = 'task-123'
 
@@ -189,21 +204,6 @@ test('should archive a task using its ID and setting isArchived to true', async 
   assert.equal(result, archivedTask)
 })
 
-test('should return null when deleting a task that does not exist', async () => {
-  const taskId = 'nonexistent-task'
-
-  const { taskRepository, taskModel } = createTaskRepository()
-
-  taskModel.findByIdAndDelete.resolves(null)
-
-  const result = await taskRepository.delete(taskId)
-
-  assert.equal(
-    taskModel.findByIdAndDelete.calledOnceWith(taskId),
-    true)
-  assert.equal(result, null)
-})
-
 test('should return null when archiving a task that does not exist', async () => {
   const taskId = 'nonexistent-task'
 
@@ -221,4 +221,29 @@ test('should return null when archiving a task that does not exist', async () =>
     true
   )
   assert.equal(result, null)
+})
+
+test('should restore a task using its ID and setting isArchived to false', async () => {
+  const taskId = 'task-123'
+
+  const restoredTask = {
+    _id: taskId,
+    title: 'Restored task',
+    isArchived: false
+  }
+
+  const { taskRepository, taskModel } = createTaskRepository()
+
+  taskModel.findByIdAndUpdate.resolves(restoredTask)
+
+  const result = await taskRepository.restore(taskId)
+
+  assert.equal(taskModel.findByIdAndUpdate.calledOnceWith(
+    taskId,
+    { isArchived: false },
+    { new: true }
+  ),
+    true
+  )
+  assert.equal(result, restoredTask)
 })
