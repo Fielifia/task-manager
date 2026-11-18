@@ -26,7 +26,7 @@ export class TaskRepository {
   async archive(taskId) {
     return this.taskModel.findByIdAndUpdate(
       taskId,
-      { isArchived: true },
+      { archivedAt: new Date() },
       { new: true }
     )
   }
