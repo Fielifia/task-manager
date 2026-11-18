@@ -188,3 +188,37 @@ test('should archive a task using its ID and setting isArchived to true', async 
   )
   assert.equal(result, archivedTask)
 })
+
+test('should return null when deleting a task that does not exist', async () => {
+  const taskId = 'nonexistent-task'
+
+  const { taskRepository, taskModel } = createTaskRepository()
+
+  taskModel.findByIdAndDelete.resolves(null)
+
+  const result = await taskRepository.delete(taskId)
+
+  assert.equal(
+    taskModel.findByIdAndDelete.calledOnceWith(taskId),
+    true)
+  assert.equal(result, null)
+})
+
+test('should return null when archiving a task that does not exist', async () => {
+  const taskId = 'nonexistent-task'
+
+  const { taskRepository, taskModel } = createTaskRepository()
+
+  taskModel.findByIdAndUpdate.resolves(null)
+
+  const result = await taskRepository.archive(taskId)
+
+  assert.equal(taskModel.findByIdAndUpdate.calledOnceWith(
+    taskId,
+    { isArchived: true },
+    { new: true }
+  ),
+    true
+  )
+  assert.equal(result, null)
+})
