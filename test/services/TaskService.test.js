@@ -12,7 +12,8 @@ function createTaskService({
     save: sinon.stub(),
     findById: sinon.stub(),
     update: sinon.stub(),
-    delete: sinon.stub()
+    delete: sinon.stub(),
+    archive: sinon.stub()
   }
 
   const taskValidationService = {
@@ -295,4 +296,24 @@ test('should return null when a task does not exist', async () => {
 
   assert.equal(taskRepository.delete.calledOnceWith(taskId), true)
   assert.equal(result, null)
+})
+
+// Task archive tests
+test('should archive a task', async () => {
+  const taskId = 'task-123'
+
+  const archivedTask = {
+    _id: taskId,
+    title: 'Task to archive',
+    isArchived: true
+  }
+
+  const { taskService, taskRepository } = createTaskService()
+
+  taskRepository.archive.resolves(archivedTask)
+
+  const result = await taskService.archiveTask(taskId)
+
+  assert.equal(taskRepository.archive.calledOnceWith(taskId), true)
+  assert.equal(result, archivedTask)
 })
