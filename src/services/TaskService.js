@@ -39,6 +39,10 @@ export class TaskService {
       priority: {
         validate: this.taskValidationService.isValidPriority,
         error: 'Invalid task priority'
+      },
+      status: {
+        validate: this.taskValidationService.isValidStatus,
+        error: 'Invalid task status'
       }
     }
 
