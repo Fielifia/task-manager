@@ -23,15 +23,21 @@ function createTaskService({
     isValidStatus: sinon.stub().returns(validStatus)
   }
 
+  const taskFactory = {
+    create: sinon.stub().callsFake(taskData => taskData)
+  }
+
   const taskService = new TaskService(
     taskRepository,
-    taskValidationService
+    taskValidationService,
+    taskFactory
   )
 
   return {
     taskService,
     taskRepository,
-    taskValidationService
+    taskValidationService,
+    taskFactory
   }
 }
 
@@ -40,7 +46,8 @@ test('should create a task with default priority and status when values are omit
   const {
     taskService,
     taskRepository,
-    taskValidationService
+    taskValidationService,
+    taskFactory
   } = createTaskService()
 
   await taskService.createTask({
@@ -64,6 +71,15 @@ test('should create a task with default priority and status when values are omit
     priority: 'Normal',
     status: 'To do'
   })
+
+  assert.equal(
+    taskFactory.create.calledOnceWith({
+      title: 'Complete project',
+      priority: 'Normal',
+      status: 'To do'
+    }),
+    true
+  )
 })
 
 test('should create a task using the injected TaskFactory', async () => {

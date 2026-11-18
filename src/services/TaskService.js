@@ -1,7 +1,8 @@
 export class TaskService {
-  constructor(taskRepository, taskValidationService) {
+  constructor(taskRepository, taskValidationService, taskFactory) {
     this.taskRepository = taskRepository
     this.taskValidationService = taskValidationService
+    this.taskFactory = taskFactory
   }
 
   async createTask(taskData) {
@@ -9,11 +10,11 @@ export class TaskService {
       throw new Error('Invalid task title')
     }
 
-    const task = {
+    const task = this.taskFactory.create({
       ...taskData,
       priority: taskData.priority ?? 'Normal',
       status: taskData.status ?? 'To do'
-    }
+    })
 
     if (!this.taskValidationService.isValidPriority(task.priority)) {
       throw new Error('Invalid task priority')
