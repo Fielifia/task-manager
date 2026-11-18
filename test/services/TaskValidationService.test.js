@@ -59,3 +59,22 @@ test('should accept High as a valid priority', () => {
 
   assert.equal(validationService.isValidPriority('High'), true)
 })
+
+// Task status validation tests
+test('should accept To do as a valid status', () => {
+  const validationService = new TaskValidationService()
+
+  assert.equal(validationService.isValidPriority('To do'), true)
+})
+
+test('should accept In progress as a valid status', () => {
+  const validationService = new TaskValidationService()
+
+  assert.equal(validationService.isValidPriority('In progress'), true)
+})
+
+test('should accept Done as a valid status', () => {
+  const validationService = new TaskValidationService()
+
+  assert.equal(validationService.isValidPriority('Done'), true)
+})
