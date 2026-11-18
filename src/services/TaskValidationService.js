@@ -8,4 +8,10 @@ export class TaskValidationService {
 
     return validPriorities.includes(priority)
   }
+
+  isValidStatus(status) {
+    const validStatuses = ['To do', 'In progress', 'Done']
+
+    return validStatuses.includes(status)
+  }
 }
