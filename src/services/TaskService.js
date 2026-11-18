@@ -25,4 +25,8 @@ export class TaskService {
 
     return this.taskRepository.save(task)
   }
+
+  async getTaskById(taskId) {
+    return this.taskRepository.findById(taskId)
+  }
 }
