@@ -127,6 +127,8 @@ test('should return a task by its ID', async () => {
 
   const { taskService, taskRepository } = createTaskService()
 
+  taskRepository.findById.resolves(foundTask)
+
   const result = await taskService.getTaskById(taskId)
 
   assert.equal(taskRepository.findById.calledOnce, true)
