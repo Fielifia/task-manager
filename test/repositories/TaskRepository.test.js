@@ -6,7 +6,8 @@ import { TaskRepository } from '../../src/repositories/TaskRepository.js'
 function createTaskRepository() {
   const taskModel = {
     create: sinon.stub(),
-    findById: sinon.stub()
+    findById: sinon.stub(),
+    findByIdAndUpdate: sinon.stub()
   }
 
   const taskRepository = new TaskRepository(taskModel)
@@ -108,7 +109,7 @@ test('should update a task using its ID and updated data', async () => {
 
   const { taskRepository, taskModel } = createTaskRepository()
 
-  taskModel.findByIdAndUpdate = sinon.stub().resolves(updatedTask)
+  taskModel.findByIdAndUpdate.resolves(updatedTask)
 
   const result = await taskRepository.update(taskId, updatedData)
 
@@ -120,4 +121,28 @@ test('should update a task using its ID and updated data', async () => {
   )
 
   assert.deepEqual(result, updatedTask)
+})
+
+test('should return null when updating a task that does not exist', async () => {
+  const taskId = 'nonexistent-task'
+
+  const updatedData = {
+    title: 'Update project'
+  }
+
+  const { taskRepository, taskModel } = createTaskRepository()
+
+  taskModel.findByIdAndUpdate.resolves(null)
+
+  const result = await taskRepository.update(taskId, updatedData)
+
+  assert.equal(taskModel.findByIdAndUpdate.calledOnce, true)
+
+  assert.deepEqual(
+    taskModel.findByIdAndUpdate.firstCall.args,
+    [taskId, updatedData, { new: true }]
+  )
+
+  assert.equal(result, null)
+
 })
