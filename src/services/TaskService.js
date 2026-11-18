@@ -65,4 +65,8 @@ export class TaskService {
   async archiveTask(taskId) {
     return this.taskRepository.archive(taskId)
   }
+
+  async restoreTask(taskId) {
+    return this.taskRepository.restore(taskId)
+  }
 }
