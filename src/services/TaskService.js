@@ -57,4 +57,8 @@ export class TaskService {
 
     return this.taskRepository.update(taskId, updatedData)
   }
+
+  async deleteTask(taskId) {
+    return this.taskRepository.delete(taskId)
+  }
 }
