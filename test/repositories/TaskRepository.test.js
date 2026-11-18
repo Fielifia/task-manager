@@ -7,7 +7,8 @@ function createTaskRepository() {
   const taskModel = {
     create: sinon.stub(),
     findById: sinon.stub(),
-    findByIdAndUpdate: sinon.stub()
+    findByIdAndUpdate: sinon.stub(),
+    findByIdAndDelete: sinon.stub()
   }
 
   const taskRepository = new TaskRepository(taskModel)
@@ -154,9 +155,9 @@ test('should delete a task using its ID', async () => {
 
   const { taskRepository, taskModel } = createTaskRepository()
 
-  taskModel.findByIdAndDelete = sinon.stub().resolves(deletedTask)
+  taskModel.findByIdAndDelete.resolves(deletedTask)
 
-  const result = await taskRepository.deleteById(taskId)
+  const result = await taskRepository.delete(taskId)
 
   assert.equal(taskModel.findByIdAndDelete.calledOnce, true)
   assert.equal(taskModel.findByIdAndDelete.firstCall.args[0], taskId)

@@ -16,7 +16,10 @@ export class TaskRepository {
       taskId,
       updatedData,
       { new: true }
-
     )
+  }
+
+  async delete(taskId) {
+    return this.taskModel.findByIdAndDelete(taskId)
   }
 }
