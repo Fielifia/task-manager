@@ -135,3 +135,13 @@ test('should return a task by its ID', async () => {
   assert.deepEqual(taskRepository.findById.firstCall.args, [taskId])
   assert.deepEqual(result, foundTask)
 })
+
+test('should return null when a task is not found', async () => {
+  const { taskService, taskRepository } = createTaskService()
+
+  taskRepository.findById.resolves(null)
+
+  const result = await taskService.getTaskById('task-123')
+
+  assert.deepEqual(result, null)
+})
