@@ -66,6 +66,41 @@ test('should create a task with default priority and status when values are omit
   })
 })
 
+test('should create a task using the injected TaskFactory', async () => {
+  const taskData = {
+    title: 'Complete project',
+    priority: 'High',
+    status: 'In progress'
+  }
+
+  const createdTask = { ...taskData }
+
+  const taskRepository = {
+    save: sinon.stub().resolves(createdTask)
+  }
+
+  const taskValidationService = {
+    isValidTitle: sinon.stub().returns(true),
+    isValidPriority: sinon.stub().returns(true),
+    isValidStatus: sinon.stub().returns(true)
+  }
+
+  const taskFactory = {
+    create: sinon.stub().returns(createdTask)
+  }
+
+  const taskService = new TaskService(
+    taskRepository,
+    taskValidationService,
+    taskFactory
+  )
+
+  await taskService.createTask(taskData)
+
+  assert.equal(taskFactory.create.calledOnceWith(taskData), true)
+  assert.equal(taskRepository.save.calledOnceWith(createdTask), true)
+})
+
 test('should reject a task with an empty title', async () => {
   const {
     taskService,
