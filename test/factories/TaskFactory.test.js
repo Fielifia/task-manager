@@ -11,8 +11,8 @@ test('should create a Task with the provided data', () => {
 
   const taskData = {
     title: 'Complete project',
-    priority: 'High',
-    status: 'In progress'
+    priority: 'HIGH',
+    status: 'IN_PROGRESS'
   }
 
   const taskFactory = new TaskFactory(FakeTask)

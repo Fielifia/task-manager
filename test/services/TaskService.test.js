@@ -69,8 +69,8 @@ test('should pass task data to the TaskFactory when creating a task', async () =
 test('should create a task using the injected TaskFactory', async () => {
   const taskData = {
     title: 'Complete project',
-    priority: 'High',
-    status: 'In progress'
+    priority: 'HIGH',
+    status: 'IN_PROGRESS'
   }
 
   const createdTask = { ...taskData }
@@ -162,8 +162,8 @@ test('should return the task matching the provided ID', async () => {
   const foundTask = {
     _id: taskId,
     title: 'Complete project',
-    priority: 'Normal',
-    status: 'To do'
+    priority: 'NORMAL',
+    status: 'TODO'
   }
 
   const { taskService, taskRepository } = createTaskService()
@@ -194,7 +194,7 @@ test('should pass the task ID and updated data to the repository', async () => {
 
   const updatedData = {
     title: 'Update project',
-    priority: 'High'
+    priority: 'HIGH'
   }
 
   const { taskService, taskRepository } = createTaskService()

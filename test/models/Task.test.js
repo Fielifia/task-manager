@@ -6,8 +6,8 @@ test('should create a Task with the provided data', () => {
   const taskData = {
     title: 'Complete project',
     description: 'Finish the testing assignment',
-    priority: 'High',
-    status: 'In progress'
+    priority: 'HIGH',
+    status: 'IN_PROGRESS'
   }
 
   const task = new Task(taskData)
@@ -18,9 +18,9 @@ test('should create a Task with the provided data', () => {
   assert.equal(task.priority, taskData.priority)
   assert.equal(task.status, taskData.status)
 })
-  
+
 test('should apply default values when optional properties are omitted', () => {
-  const task = new Task ({
+  const task = new Task({
     title: 'Complete project',
   })
 
@@ -31,7 +31,7 @@ test('should apply default values when optional properties are omitted', () => {
   assert.equal(task.status, 'TODO')
   assert.equal(task.categoryId, null)
   assert.equal(task.recurrence, null)
-  assert.equal(task.tags, [])
+  assert.deepEqual(task.tags, [])
   assert.equal(task.completedAt, null)
   assert.equal(task.archivedAt, null)
 })

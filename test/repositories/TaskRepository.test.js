@@ -22,8 +22,8 @@ function createTaskRepository() {
 test('should save a task using the injected model', async () => {
   const taskData = {
     title: 'Complete project',
-    priority: 'Normal',
-    status: 'To do'
+    priority: 'NORMAL',
+    status: 'TODO'
   }
 
   const savedTask = {
@@ -65,8 +65,8 @@ test('should find a task by its ID', async () => {
   const foundTask = {
     _id: taskId,
     title: 'Complete project',
-    priority: 'Normal',
-    status: 'To do'
+    priority: 'NORMAL',
+    status: 'TODO'
   }
 
   const { taskRepository, taskModel } = createTaskRepository()
@@ -99,8 +99,8 @@ test('should update a task using its ID and updated data', async () => {
 
   const updatedData = {
     title: 'Update project',
-    priority: 'High',
-    status: 'In progress'
+    priority: 'HIGH',
+    status: 'IN_PROGRESS'
   }
 
   const updatedTask = {
@@ -149,8 +149,8 @@ test('should delete a task using its ID', async () => {
   const deletedTask = {
     _id: taskId,
     title: 'Complete project',
-    priority: 'Normal',
-    status: 'To do'
+    priority: 'NORMAL',
+    status: 'TODO'
   }
 
   const { taskRepository, taskModel } = createTaskRepository()
