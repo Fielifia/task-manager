@@ -144,7 +144,7 @@ test('should return null when a task is not found', async () => {
 
   const result = await taskService.getTaskById('task-123')
 
-  assert.deepEqual(result, null)
+  assert.equal(result, null)
 })
 
 test('should delegate task updates to the repository', async () => {
@@ -172,4 +172,25 @@ test('should delegate task updates to the repository', async () => {
     [taskId, updatedData]
   )
   assert.deepEqual(result, updatedTask)
+})
+
+test('should return null when a task does not exist', async () => {
+  const taskId = 'nonexistent-task'
+
+  const updatedData = {
+    title: 'Update project'
+  }
+
+  const { taskService, taskRepository } = createTaskService()
+
+  taskRepository.update.resolves(null)
+
+  const result = await taskService.updateTask(taskId, updatedData)
+
+  assert.equal(taskRepository.update.calledOnce, true)
+  assert.deepEqual(
+    taskRepository.update.firstCall.args,
+    [taskId, updatedData]
+  )
+  assert.equal(result, null)
 })
