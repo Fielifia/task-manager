@@ -9,7 +9,8 @@ function createTaskService({
   isValidStatus = true
 } = {}) {
   const taskRepository = {
-    save: sinon.stub()
+    save: sinon.stub(),
+    findById: sinon.stub()
   }
 
   const taskValidationService = {
@@ -112,4 +113,23 @@ test('should reject a task with an invalid status', async () => {
   )
 
   assert.equal(taskRepository.save.called, false)
+})
+
+test('should return a task by its ID', async () => {
+  const taskId = 'task-123'
+
+  const foundTask = {
+    _id: taskId,
+    title: 'Complete project',
+    priority: 'Normal',
+    status: 'To do'
+  }
+
+  const { taskService, taskRepository } = createTaskService()
+
+  const result = await taskService.getTaskById(taskId)
+
+  assert.equal(taskRepository.findById.calledOnce, true)
+  assert.deepEqual(taskRepository.findById.firstCall.args, [taskId])
+  assert.deepEqual(result, foundTask)
 })
