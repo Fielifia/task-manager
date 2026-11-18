@@ -283,3 +283,16 @@ test('should delegate task deletion to the repository', async () => {
   assert.equal(taskRepository.delete.calledOnceWith(taskId), true)
   assert.equal(result, deletedTask)
 })
+
+test('should return null when a task does not exist', async () => {
+  const taskId = 'nonexistent-task'
+
+  const { taskService, taskRepository } = createTaskService()
+
+  taskRepository.delete.resolves(null)
+
+  const result = await taskService.deleteTask(taskId)
+
+  assert.equal(taskRepository.delete.calledOnceWith(taskId), true)
+  assert.equal(result, null)
+})
