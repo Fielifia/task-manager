@@ -399,3 +399,38 @@ test('should return null when restoring a task that does not exist', async () =>
   assert.equal(taskRepository.restore.calledOnceWith(taskId), true)
   assert.equal(result, null)
 })
+
+test('should complete a task by setting its status and completion time', async () => {
+  const taskId = 'task-123'
+  const completedAt = new Date('2026-11-18T10:00:00.000Z')
+  const clock = sinon.useFakeTimers({ now: completedAt })
+
+  try {
+      const completedTask = {
+        _id: taskId,
+        title: 'Complete project',
+        status: 'DONE',
+        completedAt
+      }
+  
+      const { taskService, taskRepository } = createTaskService()
+  
+      taskRepository.update.resolves(completedTask)
+  
+      const result = await taskService.completeTask(taskId)
+  
+      assert.equal(taskRepository.update.calledOnceWith(
+        taskId,
+        { 
+          status: 'DONE',
+          completedAt
+         }
+      ),
+        true
+    )
+    
+      assert.equal(result, completedTask)
+    } finally {
+      clock.restore()
+    }
+})
