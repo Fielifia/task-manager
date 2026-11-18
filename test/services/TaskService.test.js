@@ -3,25 +3,39 @@ import assert from 'node:assert/strict'
 import sinon from 'sinon'
 import { TaskService } from '../../src/services/TaskService.js'
 
-test('creates a task with default priority and status', async () => {
+function createTaskService({
+  isValidTitle = true,
+  isValidPriority = true,
+  isValidStatus = true
+} = {}) {
   const taskRepository = {
-    save: sinon.stub().resolves({
-      title: 'Complete project',
-      priority: 'Normal',
-      status: 'To do'
-    })
+    save: sinon.stub()
   }
 
   const taskValidationService = {
-    isValidTitle: sinon.stub().returns(true),
-    isValidPriority: sinon.stub().returns(true),
-    isValidStatus: sinon.stub().returns(true)
+    isValidTitle: sinon.stub().returns(isValidTitle),
+    isValidPriority: sinon.stub().returns(isValidPriority),
+    isValidStatus: sinon.stub().returns(isValidStatus)
   }
 
   const taskService = new TaskService(
     taskRepository,
     taskValidationService
   )
+
+  return {
+    taskService,
+    taskRepository,
+    taskValidationService
+  }
+}
+
+test('creates a task with default priority and status', async () => {
+  const {
+    taskService,
+    taskRepository,
+    taskValidationService
+  } = createTaskService()
 
   await taskService.createTask({
     title: 'Complete project'
@@ -47,18 +61,12 @@ test('creates a task with default priority and status', async () => {
 })
 
 test('should reject a task with an empty title', async () => {
-  const taskRepository = {
-    save: sinon.stub()
-  }
-
-  const taskValidationService = {
-    isValidTitle: sinon.stub().returns(false),
-  }
-
-  const taskService = new TaskService(
-    taskRepository,
-    taskValidationService
-  )
+  const {
+    taskService,
+    taskRepository
+  } = createTaskService({
+    isValidTitle: false
+  })
 
   await assert.rejects(
     taskService.createTask({ title: '' }),
@@ -69,19 +77,12 @@ test('should reject a task with an empty title', async () => {
 })
 
 test('should reject a task with an invalid priority', async () => {
-  const taskRepository = {
-    save: sinon.stub()
-  }
-
-  const taskValidationService = {
-    isValidTitle: sinon.stub().returns(true),
-    isValidPriority: sinon.stub().returns(false)
-  }
-
-  const taskService = new TaskService(
-    taskRepository,
-    taskValidationService
-  )
+  const {
+    taskService,
+    taskRepository
+  } = createTaskService({
+    isValidPriority: false
+  })
 
   await assert.rejects(
     taskService.createTask({
@@ -95,20 +96,12 @@ test('should reject a task with an invalid priority', async () => {
 })
 
 test('should reject a task with an invalid status', async () => {
-  const taskRepository = {
-    save: sinon.stub()
-  }
-
-  const taskValidationService = {
-    isValidTitle: sinon.stub().returns(true),
-    isValidPriority: sinon.stub().returns(true),
-    isValidStatus: sinon.stub().returns(false)
-  }
-
-  const taskService = new TaskService(
-    taskRepository,
-    taskValidationService
-  )
+  const {
+    taskService,
+    taskRepository
+  } = createTaskService({
+    isValidStatus: false
+  })
 
   await assert.rejects(
     taskService.createTask({
