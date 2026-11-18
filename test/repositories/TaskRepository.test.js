@@ -5,7 +5,8 @@ import { TaskRepository } from '../../src/repositories/TaskRepository.js'
 
 function createTaskRepository() {
   const taskModel = {
-    create: sinon.stub()
+    create: sinon.stub(),
+    findById: sinon.stub()
   }
 
   const taskRepository = new TaskRepository(taskModel)
@@ -68,11 +69,25 @@ test('should find a task by its ID', async () => {
 
   const { taskRepository, taskModel } = createTaskRepository()
 
-  taskModel.findById = sinon.stub().resolves(foundTask)
+  taskModel.findById.resolves(foundTask)
 
   const result = await taskRepository.findById(taskId)
 
   assert.equal(taskModel.findById.calledOnce, true)
   assert.equal(taskModel.findById.firstCall.args[0], taskId)
   assert.deepEqual(result, foundTask)
+})
+
+test('should return null when a task is not found', async () => {
+  const taskId = 'nonexistent-task'
+
+  const { taskRepository, taskModel } = createTaskRepository()
+
+  taskModel.findById.resolves(null)
+
+  const result = await taskRepository.findById(taskId)
+
+  assert.equal(taskModel.findById.calledOnce, true)
+  assert.equal(taskModel.findById.firstCall.args[0], taskId)
+  assert.equal(result, null)
 })
