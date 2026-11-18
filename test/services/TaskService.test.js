@@ -32,6 +32,7 @@ function createTaskService({
   }
 }
 
+// Task creation tests
 test('creates a task with default priority and status', async () => {
   const {
     taskService,
@@ -116,6 +117,7 @@ test('should reject a task with an invalid status', async () => {
   assert.equal(taskRepository.save.called, false)
 })
 
+// Task retrieval tests
 test('should return a task by its ID', async () => {
   const taskId = 'task-123'
 
@@ -193,4 +195,27 @@ test('should return null when a task does not exist', async () => {
     [taskId, updatedData]
   )
   assert.equal(result, null)
+})
+
+// Task update tests
+test('should reject an update with an empty title', async () => {
+  const taskId = 'task-123'
+
+  const updatedData = {
+    title: '    '
+  }
+
+  const {
+    taskService,
+    taskRepository
+  } = createTaskService({
+    isValidTitle: false
+  })
+
+  await assert.rejects(
+    taskService.updateTask(taskId, updatedData),
+    /Invalid task title/
+  )
+
+  assert.equal(taskRepository.update.called, false)
 })
