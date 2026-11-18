@@ -241,3 +241,25 @@ test('should reject an update with an invalid priority', async () => {
 
   assert.equal(taskRepository.update.called, false)
 })
+
+test('should reject an update with an invalid status', async () => {
+  const taskId = 'task-123'
+
+  const updatedData = {
+    status: 'Completed'
+  }
+
+  const {
+    taskService,
+    taskRepository
+  } = createTaskService({
+    isValidStatus: false
+  })
+
+  await assert.rejects(
+    taskService.updateTask(taskId, updatedData),
+    /Invalid task status/
+  )
+
+  assert.equal(taskRepository.update.called, false)
+})
