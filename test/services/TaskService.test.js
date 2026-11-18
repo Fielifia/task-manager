@@ -11,7 +11,8 @@ function createTaskService({
   const taskRepository = {
     save: sinon.stub(),
     findById: sinon.stub(),
-    update: sinon.stub()
+    update: sinon.stub(),
+    delete: sinon.stub()
   }
 
   const taskValidationService = {
@@ -149,6 +150,7 @@ test('should return null when a task is not found', async () => {
   assert.equal(result, null)
 })
 
+// Task update tests
 test('should delegate task updates to the repository', async () => {
   const taskId = 'task-123'
 
@@ -197,7 +199,6 @@ test('should return null when a task does not exist', async () => {
   assert.equal(result, null)
 })
 
-// Task update tests
 test('should reject an update with an empty title', async () => {
   const taskId = 'task-123'
 
@@ -262,4 +263,23 @@ test('should reject an update with an invalid status', async () => {
   )
 
   assert.equal(taskRepository.update.called, false)
+})
+
+// Task deletion tests
+test('should delegate task deletion to the repository', async () => {
+  const taskId = 'task-123'
+
+  const deletedTask = {
+    _id: taskId,
+    title: 'Task to delete'
+  }
+
+  const { taskService, taskRepository } = createTaskService()
+
+  taskRepository.delete.resolves(deletedTask)
+
+  const result = await taskService.deleteTask(taskId)
+
+  assert.equal(taskRepository.delete.calledOnceWith(taskId), true)
+  assert.equal(result, deletedTask)
 })
