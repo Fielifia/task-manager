@@ -114,12 +114,10 @@ test('should update a task using its ID and updated data', async () => {
   const result = await taskRepository.update(taskId, updatedData)
 
   assert.equal(taskModel.findByIdAndUpdate.calledOnce, true)
-
   assert.deepEqual(
     taskModel.findByIdAndUpdate.firstCall.args,
     [taskId, updatedData, { new: true }]
   )
-
   assert.deepEqual(result, updatedTask)
 })
 
@@ -137,12 +135,30 @@ test('should return null when updating a task that does not exist', async () => 
   const result = await taskRepository.update(taskId, updatedData)
 
   assert.equal(taskModel.findByIdAndUpdate.calledOnce, true)
-
   assert.deepEqual(
     taskModel.findByIdAndUpdate.firstCall.args,
     [taskId, updatedData, { new: true }]
   )
-
   assert.equal(result, null)
+})
 
+test('should delete a task using its ID', async () => {
+  const taskId = 'task-123'
+
+  const deletedTask = {
+    _id: taskId,
+    title: 'Complete project',
+    priority: 'Normal',
+    status: 'To do'
+  }
+
+  const { taskRepository, taskModel } = createTaskRepository()
+
+  taskModel.findByIdAndDelete = sinon.stub().resolves(deletedTask)
+
+  const result = await taskRepository.deleteById(taskId)
+
+  assert.equal(taskModel.findByIdAndDelete.calledOnce, true)
+  assert.equal(taskModel.findByIdAndDelete.firstCall.args[0], taskId)
+  assert.deepEqual(result, deletedTask)
 })
