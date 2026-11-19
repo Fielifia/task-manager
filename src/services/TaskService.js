@@ -75,4 +75,12 @@ export class TaskService {
       completedAt
     })
   }
+
+  async reopenTask(taskId) {
+    return this.taskRepository.update(taskId, {
+      status: 'TODO',
+      completedAt: null
+    })
+  }
+  
 }
