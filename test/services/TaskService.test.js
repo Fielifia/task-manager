@@ -486,7 +486,28 @@ test('should reopen a completed task by resetting its status and completion time
     ),
       true
     )
-
     assert.equal(result, reopenedTask)
+})
 
+test('should return null when reopening a task that does not exist', async () => {
+  const taskId = 'nonexistent-task'
+
+  const { taskService, taskRepository } = createTaskService()
+
+  taskRepository.update.resolves(null)
+
+  const result = await taskService.reopenTask(taskId)
+
+
+  assert.equal(
+    taskRepository.update.calledOnceWith(
+      taskId,
+      {
+        status: 'TODO',
+        completedAt: null
+      }
+    ),
+    true
+  )
+  assert.equal(result, null)
 })
