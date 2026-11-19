@@ -335,7 +335,7 @@ test('should return null when deleting a task that does not exist', async () => 
   assert.equal(result, null)
 })
 
-// Task archive tests
+// Task archiving tests
 test('should archive a task by its ID', async () => {
   const taskId = 'task-123'
 
@@ -368,6 +368,7 @@ test('should return null when archiving a task that does not exist', async () =>
   assert.equal(result, null)
 })
 
+// Task restoring tests
 test('should restore an archived task by its ID', async () => {
   const taskId = 'task-123'
 
@@ -400,6 +401,7 @@ test('should return null when restoring a task that does not exist', async () =>
   assert.equal(result, null)
 })
 
+// Task completion tests
 test('should complete a task by setting its status and completion time', async () => {
   const taskId = 'task-123'
   const completedAt = new Date('2026-11-18T10:00:00.000Z')
@@ -456,4 +458,35 @@ test('should return null when completing a task that does not exist', async () =
     true
   )
   assert.equal(result, null)
+})
+
+// Task reopening tests
+test('should reopen a completed task by resetting its status and completion time', async () => {
+  const taskId = 'task-123'
+
+    const reopenedTask = {
+      _id: taskId,
+      title: 'Complete project',
+      status: 'TODO',
+      completedAt : null
+    }
+
+    const { taskService, taskRepository } = createTaskService()
+
+    taskRepository.update.resolves(reopenedTask)
+
+    const result = await taskService.reopenTask(taskId)
+
+    assert.equal(taskRepository.update.calledOnceWith(
+      taskId,
+      {
+        status: 'TODO',
+        completedAt: null
+      }
+    ),
+      true
+    )
+
+    assert.equal(result, reopenedTask)
+
 })
