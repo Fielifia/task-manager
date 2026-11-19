@@ -406,31 +406,54 @@ test('should complete a task by setting its status and completion time', async (
   const clock = sinon.useFakeTimers({ now: completedAt })
 
   try {
-      const completedTask = {
-        _id: taskId,
-        title: 'Complete project',
+    const completedTask = {
+      _id: taskId,
+      title: 'Complete project',
+      status: 'DONE',
+      completedAt
+    }
+
+    const { taskService, taskRepository } = createTaskService()
+
+    taskRepository.update.resolves(completedTask)
+
+    const result = await taskService.completeTask(taskId)
+
+    assert.equal(taskRepository.update.calledOnceWith(
+      taskId,
+      {
         status: 'DONE',
         completedAt
       }
-  
-      const { taskService, taskRepository } = createTaskService()
-  
-      taskRepository.update.resolves(completedTask)
-  
-      const result = await taskService.completeTask(taskId)
-  
-      assert.equal(taskRepository.update.calledOnceWith(
-        taskId,
-        { 
-          status: 'DONE',
-          completedAt
-         }
-      ),
-        true
+    ),
+      true
     )
-    
-      assert.equal(result, completedTask)
-    } finally {
-      clock.restore()
-    }
+
+    assert.equal(result, completedTask)
+  } finally {
+    clock.restore()
+  }
+})
+
+test('should return null when completing a task that does not exist', async () => {
+  const taskId = 'nonexistent-task'
+
+  const { taskService, taskRepository } = createTaskService()
+
+  taskRepository.update.resolves(null)
+
+  const result = await taskService.completeTask(taskId)
+
+
+  assert.equal(
+    taskRepository.update.calledOnceWith(
+      taskId,
+      {
+        status: 'DONE',
+        completedAt: sinon.match.date
+      }
+    ),
+    true
+  )
+  assert.equal(result, null)
 })
